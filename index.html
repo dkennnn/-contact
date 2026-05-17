@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+  <meta name="theme-color" content="#0F1419" />
+  <meta name="robots" content="index,follow" />
+  <meta name="description" content="Dkendev — indie mobile &amp; HTML5 studio crafting tools and games people actually keep open. Mobile, web, native — shipped." />
+  <meta property="og:title" content="Dkendev — Indie mobile &amp; HTML5 studio" />
+  <meta property="og:description" content="Tools and games people actually keep open. Mobile, web, native — shipped." />
+  <meta property="og:type" content="website" />
+  <title>Dkendev — Indie mobile &amp; HTML5 studio</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237C3AED'/%3E%3Cstop offset='1' stop-color='%2306B6D4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='url(%23g)'/%3E%3Ctext x='50' y='66' font-family='system-ui,-apple-system,Segoe UI' font-size='44' font-weight='800' text-anchor='middle' fill='white' letter-spacing='-2'%3EDK%3C/text%3E%3C/svg%3E" />
+
+  <style>
+    /* ─── Design tokens ─────────────────────────────────────────── */
+    :root {
+      --bg: #0B0F14;
+      --bg-2: #11161D;
+      --surface: #161C24;
+      --surface-2: #1B232C;
+      --border: #232C36;
+      --text: #E6EBF0;
+      --text-soft: #8B98A8;
+      --text-dim: #5A6675;
+      --accent: #06B6D4;
+      --accent-2: #7C3AED;
+      --accent-3: #F59E0B;
+      --success: #10B981;
+      --radius: 14px;
+      --radius-lg: 22px;
+      --font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+      --font-mono: ui-monospace, "JetBrains Mono", "Fira Code", Menlo, monospace;
+      --shadow-glow: 0 20px 60px -20px rgba(124, 58, 237, 0.4);
+    }
+
+    /* ─── Reset + base ──────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; transition: color .2s; }
+    img { max-width: 100%; display: block; }
+    button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+    /* ─── Layout helpers ────────────────────────────────────────── */
+    .wrap { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+    section { padding: 96px 0; position: relative; }
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+    .section-subtitle {
+      color: var(--text-soft);
+      font-size: 16px;
+      max-width: 620px;
+      margin-bottom: 48px;
+    }
+
+    /* ─── Navbar ────────────────────────────────────────────────── */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(18px) saturate(180%);
+      -webkit-backdrop-filter: blur(18px) saturate(180%);
+      background: rgba(11, 15, 20, 0.72);
+      border-bottom: 1px solid rgba(35, 44, 54, 0.6);
+    }
+    .nav-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 17px;
+      letter-spacing: -0.4px;
+    }
+    .logo-mark {
+      width: 30px;
+      height: 30px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, var(--accent-2), var(--accent));
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+    }
+    .nav-links { display: flex; gap: 28px; align-items: center; }
+    .nav-links a {
+      font-size: 14px;
+      color: var(--text-soft);
+      font-weight: 500;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      padding: 8px 16px;
+      background: var(--text);
+      color: var(--bg);
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .nav-cta:hover { background: var(--accent); color: white; }
+    @media (max-width: 640px) {
+      .nav-links a:not(.nav-cta) { display: none; }
+    }
+
+    /* ─── Hero ──────────────────────────────────────────────────── */
+    .hero {
+      padding: 120px 0 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 900px;
+      background: radial-gradient(circle, rgba(124, 58, 237, 0.18) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      top: 50px;
+      right: -200px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(6, 182, 212, 0.12) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 60px;
+      align-items: center;
+      position: relative;
+    }
+    @media (max-width: 880px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+    }
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      background: rgba(6, 182, 212, 0.10);
+      border: 1px solid rgba(6, 182, 212, 0.35);
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 24px;
+    }
+    .hero-pill .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .hero h1 {
+      font-size: clamp(40px, 6vw, 64px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -2px;
+      margin-bottom: 24px;
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #06B6D4 0%, #7C3AED 50%, #F59E0B 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .hero-lead {
+      font-size: 18px;
+      color: var(--text-soft);
+      max-width: 540px;
+      margin-bottom: 36px;
+      line-height: 1.6;
+    }
+    .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-primary {
+      padding: 13px 22px;
+      background: linear-gradient(135deg, var(--accent-2), var(--accent));
+      color: white;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.2px;
+      box-shadow: var(--shadow-glow);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 24px 60px -16px rgba(124, 58, 237, 0.55);
+    }
+    .btn-ghost {
+      padding: 13px 22px;
+      background: var(--surface);
+      color: var(--text);
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all .2s;
+    }
+    .btn-ghost:hover { background: var(--surface-2); border-color: var(--accent); }
+
+    /* ─── Hero visual ───────────────────────────────────────────── */
+    .hero-visual {
+      position: relative;
+      height: 460px;
+      display: grid;
+      place-items: center;
+    }
+    .phone {
+      position: relative;
+      width: 240px;
+      height: 460px;
+      background: linear-gradient(135deg, #1a2330, #0e1419);
+      border-radius: 38px;
+      padding: 14px;
+      border: 1px solid #2a3340;
+      box-shadow:
+        0 30px 80px -20px rgba(0, 0, 0, 0.6),
+        0 0 60px -20px rgba(124, 58, 237, 0.3),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+      transform: rotate(-3deg);
+      transition: transform .4s;
+    }
+    .phone:hover { transform: rotate(-1deg) scale(1.02); }
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      border-radius: 28px;
+      background: linear-gradient(165deg, #F8F6F1 0%, #EEF7F5 100%);
+      padding: 22px 16px;
+      overflow: hidden;
+      position: relative;
+    }
+    .phone-notch {
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70px;
+      height: 18px;
+      background: #0B0F14;
+      border-radius: 0 0 12px 12px;
+      z-index: 2;
+    }
+    .phone-content { padding-top: 12px; color: #1F2A2C; }
+    .phone-greeting { font-size: 11px; font-weight: 600; color: #5A6669; }
+    .phone-day { font-size: 17px; font-weight: 800; margin-top: 2px; }
+    .phone-summary {
+      margin-top: 14px;
+      padding: 12px;
+      background: linear-gradient(135deg, #1F8A7E, #2BB3A3);
+      color: white;
+      border-radius: 12px;
+      font-size: 12px;
+    }
+    .phone-summary-big { font-size: 18px; font-weight: 800; margin-top: 2px; }
+    .phone-tile {
+      margin-top: 8px;
+      padding: 10px 12px;
+      background: white;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+    }
+    .phone-tile-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 7px;
+      background: #B4E3DD;
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+    }
+    .phone-tile.done .phone-tile-icon { background: #FF8A4C; color: white; }
+    .phone-tile-check {
+      margin-left: auto;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1.5px solid #B0BEC5;
+    }
+    .phone-tile.done .phone-tile-check {
+      background: #2BB3A3;
+      border-color: #2BB3A3;
+      color: white;
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      font-weight: 900;
+    }
+    .float-card {
+      position: absolute;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      box-shadow: 0 18px 40px -10px rgba(0,0,0,0.6);
+      animation: float 5s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .float-card-1 {
+      top: 60px;
+      left: -10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .float-card-1 .emoji { font-size: 18px; }
+    .float-card-2 {
+      bottom: 80px;
+      right: 0;
+      animation-delay: 1.5s;
+    }
+    .float-card-2 .stat-num {
+      font-size: 22px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent-3), var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .float-card-2 .stat-label {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-top: -2px;
+    }
+    @media (max-width: 880px) {
+      .hero-visual { height: 420px; }
+      .float-card-1 { left: -20px; }
+    }
+
+    /* ─── Stats strip ───────────────────────────────────────────── */
+    .stats {
+      padding: 56px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-2);
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      text-align: center;
+    }
+    @media (max-width: 640px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    }
+    .stat-value {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      background: linear-gradient(135deg, var(--text), var(--text-soft));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .stat-name {
+      font-size: 13px;
+      color: var(--text-soft);
+      font-weight: 500;
+      margin-top: 4px;
+    }
+
+    /* ─── Featured product (Tiny Wins) ──────────────────────────── */
+    .featured-card {
+      background: linear-gradient(135deg, var(--surface), var(--surface-2));
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 40px;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .featured-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(43, 179, 163, 0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    @media (max-width: 800px) {
+      .featured-card {
+        grid-template-columns: 1fr;
+        padding: 28px;
+      }
+    }
+    .featured-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      background: rgba(43, 179, 163, 0.18);
+      color: #5BD3C3;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .featured-title {
+      font-size: clamp(28px, 4vw, 36px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 10px;
+    }
+    .featured-tagline {
+      color: var(--text-soft);
+      font-size: 16px;
+      margin-bottom: 22px;
+      line-height: 1.55;
+    }
+    .featured-features {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px 16px;
+      margin-bottom: 24px;
+    }
+    .featured-features li {
+      list-style: none;
+      font-size: 13px;
+      color: var(--text-soft);
+      padding-left: 22px;
+      position: relative;
+    }
+    .featured-features li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 16px;
+      height: 16px;
+      background: rgba(43, 179, 163, 0.22);
+      color: #5BD3C3;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 10px;
+      font-weight: 900;
+    }
+    .featured-tw-icon {
+      justify-self: center;
+      width: 200px;
+      height: 200px;
+      border-radius: 46px;
+      overflow: hidden;
+      box-shadow:
+        0 30px 70px -20px rgba(43, 179, 163, 0.55),
+        0 0 0 1px rgba(255,255,255,0.06);
+      position: relative;
+      transition: transform .4s ease;
+    }
+    .featured-tw-icon:hover { transform: scale(1.03) rotate(-2deg); }
+    .featured-tw-icon img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+    .play-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 20px;
+      background: #000;
+      color: white;
+      border-radius: 10px;
+      font-weight: 700;
+      transition: transform .2s;
+    }
+    .play-badge:hover { transform: translateY(-2px); }
+    .play-badge svg { width: 24px; height: 24px; flex-shrink: 0; }
+    .play-badge .play-small { font-size: 10px; font-weight: 500; line-height: 1; }
+    .play-badge .play-big { font-size: 15px; line-height: 1.2; margin-top: 2px; }
+
+    /* ─── Products grid ─────────────────────────────────────────── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+    @media (max-width: 880px) {
+      .grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 560px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      transition: all .25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      box-shadow: 0 24px 50px -20px rgba(6, 182, 212, 0.3);
+    }
+    .card-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 13px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 18px;
+      font-size: 24px;
+    }
+    .card-icon.bg-violet { background: linear-gradient(135deg, #7C3AED, #5B21B6); color: white; }
+    .card-icon.bg-amber { background: linear-gradient(135deg, #F59E0B, #B45309); color: white; }
+    .card-icon.bg-rose { background: linear-gradient(135deg, #F43F5E, #9F1239); color: white; }
+    .card-icon.bg-emerald { background: linear-gradient(135deg, #10B981, #047857); color: white; }
+    .card-icon.bg-blue { background: linear-gradient(135deg, #3B82F6, #1E40AF); color: white; }
+    .card-platform {
+      display: inline-block;
+      padding: 2px 8px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-soft);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .card-title {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -0.3px;
+    }
+    .card-desc {
+      font-size: 13.5px;
+      color: var(--text-soft);
+      line-height: 1.55;
+      margin-bottom: 14px;
+    }
+    .card-meta {
+      display: flex;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+    .card-meta span { display: inline-flex; align-items: center; gap: 4px; }
+
+    /* ─── About / Approach ──────────────────────────────────────── */
+    .about {
+      background: var(--bg-2);
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    @media (max-width: 800px) {
+      .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    }
+    .principles { display: flex; flex-direction: column; gap: 22px; }
+    .principle {
+      display: flex;
+      gap: 18px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--border);
+    }
+    .principle:last-child { border-bottom: 0; padding-bottom: 0; }
+    .principle-num {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: grid;
+      place-items: center;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .principle h4 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .principle p {
+      font-size: 13.5px;
+      color: var(--text-soft);
+      line-height: 1.55;
+    }
+
+    /* ─── Tech stack ────────────────────────────────────────────── */
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+    }
+    .stack-chip {
+      padding: 14px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13.5px;
+      font-weight: 600;
+      transition: all .2s;
+    }
+    .stack-chip:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+    .stack-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    /* ─── Contact ───────────────────────────────────────────────── */
+    .contact-card {
+      background: linear-gradient(135deg, var(--surface), var(--surface-2));
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 60px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .contact-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .contact-card * { position: relative; }
+    .contact-email {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 28px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-family: var(--font-mono);
+      font-size: 15px;
+      font-weight: 600;
+      margin-top: 28px;
+      transition: all .2s;
+    }
+    .contact-email:hover {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    /* ─── Footer ────────────────────────────────────────────────── */
+    footer {
+      padding: 36px 0;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-links { display: flex; gap: 22px; }
+    .footer-links a:hover { color: var(--accent); }
+
+    /* ─── Accessibility / motion ────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── Nav ────────────────────────────────────────────── -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="#" class="logo">
+        <div class="logo-mark">DK</div>
+        Dkendev
+      </a>
+      <div class="nav-links">
+        <a href="#products">Products</a>
+        <a href="#about">About</a>
+        <a href="#stack">Stack</a>
+        <a href="#contact" class="nav-cta">Get in touch</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ─── Hero ───────────────────────────────────────────── -->
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="hero-pill">
+          <span class="dot"></span>
+          Open for new collaborations
+        </div>
+        <h1>
+          Indie mobile &amp; <span class="gradient-text">HTML5</span> studio
+        </h1>
+        <p class="hero-lead">
+          We build tools and games people actually keep open. Mobile-first,
+          offline-friendly, ad-aware, privacy-respecting. Shipping since 2019
+          across Flutter, Unity and the open web.
+        </p>
+        <div class="hero-ctas">
+          <a href="#products" class="btn-primary">
+            See what we shipped
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+          <a href="#contact" class="btn-ghost">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Work with us
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="phone" aria-hidden="true">
+          <div class="phone-screen">
+            <div class="phone-notch"></div>
+            <div class="phone-content">
+              <div class="phone-greeting">Good morning 🌅</div>
+              <div class="phone-day">Sunday, May 17</div>
+              <div class="phone-summary">
+                Tiny Wins
+                <div class="phone-summary-big">3 of 5 done</div>
+              </div>
+              <div class="phone-tile done">
+                <div class="phone-tile-icon">💧</div>
+                Drink water
+                <div class="phone-tile-check">✓</div>
+              </div>
+              <div class="phone-tile done">
+                <div class="phone-tile-icon">💊</div>
+                Take my meds
+                <div class="phone-tile-check">✓</div>
+              </div>
+              <div class="phone-tile">
+                <div class="phone-tile-icon">🚶</div>
+                5-min reset walk
+                <div class="phone-tile-check"></div>
+              </div>
+              <div class="phone-tile">
+                <div class="phone-tile-icon">📖</div>
+                Read 5 minutes
+                <div class="phone-tile-check"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="float-card float-card-1">
+          <span class="emoji">🐣</span>
+          <div>
+            <div style="font-size: 11px; color: var(--text-soft);">Pet earned</div>
+            <div>Sproutling unlocked</div>
+          </div>
+        </div>
+        <div class="float-card float-card-2">
+          <div class="stat-num">4.8★</div>
+          <div class="stat-label">Avg rating</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── Stats strip ────────────────────────────────────── -->
+  <section class="stats" style="padding: 56px 0;">
+    <div class="wrap">
+      <div class="stats-grid">
+        <div>
+          <div class="stat-value">6+</div>
+          <div class="stat-name">Years building</div>
+        </div>
+        <div>
+          <div class="stat-value">12</div>
+          <div class="stat-name">Apps &amp; games shipped</div>
+        </div>
+        <div>
+          <div class="stat-value">3</div>
+          <div class="stat-name">Platforms (Android · iOS · Web)</div>
+        </div>
+        <div>
+          <div class="stat-value">100%</div>
+          <div class="stat-name">Indie · self-funded</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Featured: Tiny Wins ────────────────────────────── -->
+  <section id="products">
+    <div class="wrap">
+      <div class="section-label">Featured release</div>
+      <h2 class="section-title">What we shipped most recently</h2>
+      <p class="section-subtitle">
+        A new cozy habit tracker designed end-to-end for ADHD adults — encrypted,
+        offline-first, with a pet companion that grows across 50 forms.
+      </p>
+
+      <div class="featured-card">
+        <div>
+          <div class="featured-badge">⭐ New · 2026</div>
+          <h3 class="featured-title">Tiny Wins</h3>
+          <p class="featured-tagline">
+            A cozy ADHD habit tracker. Tick in 3 seconds. Never punished for
+            missing a day. A pet that grows with you across 50 cozy forms.
+          </p>
+          <ul class="featured-features">
+            <li>Pause Week safety valve</li>
+            <li>Brain Dumps quick capture</li>
+            <li>30+ achievements</li>
+            <li>50 pet forms to collect</li>
+            <li>Encrypted SQLite local-only</li>
+            <li>Unlimited habits free forever</li>
+          </ul>
+          <a href="https://play.google.com/store/apps/details?id=com.dkenapp.tinywins" target="_blank" rel="noopener" class="play-badge">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 20.5V3.5c0-.83.45-1.57 1.12-1.95l13.59 10.45L4.12 22.45C3.45 22.07 3 21.33 3 20.5zm14.39-7.8L19.92 14.4 21.66 13c.49-.39.49-1.14 0-1.54l-1.74-1.4-2.53 1.7-.01.04zM5.85 22.79l11.62-6.27-2.69-2.07L5.85 22.79zm0-21.58L14.78 8.55l2.69-2.07L5.85 1.21z"/></svg>
+            <div>
+              <div class="play-small">Get it on</div>
+              <div class="play-big">Google Play</div>
+            </div>
+          </a>
+        </div>
+        <div class="featured-tw-icon">
+          <img src="tinywins-icon.png"
+               alt="Tiny Wins app icon"
+               width="200" height="200"
+               loading="lazy" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── More products ──────────────────────────────────── -->
+  <section style="padding-top: 0;">
+    <div class="wrap">
+      <div class="section-label">More from the studio</div>
+      <h2 class="section-title">Older releases &amp; in flight</h2>
+      <p class="section-subtitle">
+        Earlier titles built across Unity, Flutter and HTML5 Canvas. A mix of
+        casual games + small productivity tools.
+      </p>
+
+      <div class="grid">
+        <a href="#" class="card">
+          <div class="card-icon bg-amber">🎯</div>
+          <div class="card-platform">HTML5 · Web</div>
+          <h3 class="card-title">Aim Drill</h3>
+          <p class="card-desc">
+            Pure-canvas reflex trainer for FPS warm-ups. 6 game modes, sub-16 ms
+            input latency, no install.
+          </p>
+          <div class="card-meta">
+            <span>🌐 Browser</span>
+            <span>👥 50K+ plays</span>
+          </div>
+        </a>
+
+        <a href="#" class="card">
+          <div class="card-icon bg-violet">🧩</div>
+          <div class="card-platform">HTML5 · Web</div>
+          <h3 class="card-title">Lumic Puzzle</h3>
+          <p class="card-desc">
+            Daily light-routing puzzle, one new level every morning. 200+
+            handcrafted boards.
+          </p>
+          <div class="card-meta">
+            <span>🌐 Browser</span>
+            <span>🧠 Daily</span>
+          </div>
+        </a>
+
+        <a href="#" class="card">
+          <div class="card-icon bg-rose">⚡</div>
+          <div class="card-platform">HTML5 · Web</div>
+          <h3 class="card-title">FlashType</h3>
+          <p class="card-desc">
+            Typing speed test that adapts to your weakest keys. Charts, weekly
+            challenge, no signup.
+          </p>
+          <div class="card-meta">
+            <span>🌐 Browser</span>
+            <span>⌨ WPM tracker</span>
+          </div>
+        </a>
+
+        <a href="#" class="card">
+          <div class="card-icon bg-emerald">📓</div>
+          <div class="card-platform">Android · Flutter</div>
+          <h3 class="card-title">Daily Threads</h3>
+          <p class="card-desc">
+            One-question journaling app. 60 seconds a day. End-to-end encrypted
+            local storage.
+          </p>
+          <div class="card-meta">
+            <span>📱 Android</span>
+            <span>🔒 Private</span>
+          </div>
+        </a>
+
+        <a href="#" class="card">
+          <div class="card-icon bg-blue">🌊</div>
+          <div class="card-platform">Android · Flutter</div>
+          <h3 class="card-title">Tide Sleep</h3>
+          <p class="card-desc">
+            Adaptive sleep-window detector that suggests the smartest 90-minute
+            wake time based on your prior week.
+          </p>
+          <div class="card-meta">
+            <span>📱 Android</span>
+            <span>😴 Sleep</span>
+          </div>
+        </a>
+
+        <a href="#" class="card">
+          <div class="card-icon bg-amber">🚀</div>
+          <div class="card-platform">In development</div>
+          <h3 class="card-title">Project Bloom <span style="color: var(--text-dim); font-weight: 400;">(soon)</span></h3>
+          <p class="card-desc">
+            Co-op micro-MMO for 4 friends — chill farming meets light strategy.
+            Currently in private alpha.
+          </p>
+          <div class="card-meta">
+            <span>🎮 Multi-platform</span>
+            <span>🔜 2026 Q4</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── About / Approach ───────────────────────────────── -->
+  <section id="about" class="about">
+    <div class="wrap">
+      <div class="about-grid">
+        <div>
+          <div class="section-label">Who we are</div>
+          <h2 class="section-title">A small studio with strong opinions about software.</h2>
+          <p style="color: var(--text-soft); margin-bottom: 24px; line-height: 1.65;">
+            Dkendev is a one-person indie studio based in Vietnam, shipping
+            cross-platform apps and games since 2019. We pick projects that
+            scratch a real itch — usually our own — and we hold them to a high
+            bar: warm UX, real privacy, no dark patterns, no nagging.
+          </p>
+          <p style="color: var(--text-soft); line-height: 1.65;">
+            We work with indie publishers, agencies and direct clients on
+            mobile (Flutter), HTML5 games (Canvas / WebGL) and small native
+            tools. Open to contract work, white-label builds, and partnership
+            on the right idea.
+          </p>
+        </div>
+
+        <div class="principles">
+          <div class="principle">
+            <div class="principle-num">01</div>
+            <div>
+              <h4>Shipping beats perfection</h4>
+              <p>Every project has a Friday-eve deadline. v1 is allowed to be ugly; it's not allowed to be late.</p>
+            </div>
+          </div>
+          <div class="principle">
+            <div class="principle-num">02</div>
+            <div>
+              <h4>Offline-first by default</h4>
+              <p>If your tool stops working when the wifi dies, we built it wrong. Local SQLite + optional sync is the pattern.</p>
+            </div>
+          </div>
+          <div class="principle">
+            <div class="principle-num">03</div>
+            <div>
+              <h4>No dark patterns, no nags</h4>
+              <p>Cancel buttons are real cancel buttons. Free tiers are honestly free forever. Paywalls don't hide behind fake "save" buttons.</p>
+            </div>
+          </div>
+          <div class="principle">
+            <div class="principle-num">04</div>
+            <div>
+              <h4>One human, full ownership</h4>
+              <p>From research to icon to App Store review reply. You always talk to the person who wrote the code.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Tech stack ─────────────────────────────────────── -->
+  <section id="stack">
+    <div class="wrap">
+      <div class="section-label">What we build with</div>
+      <h2 class="section-title">Battle-tested stack</h2>
+      <p class="section-subtitle">
+        Six years of pulling rope on production-ready tooling. Brief, not
+        exhaustive — we pick the right hammer for each nail.
+      </p>
+
+      <div class="stack-grid">
+        <div class="stack-chip"><span class="stack-dot" style="background:#02569B"></span>Flutter / Dart</div>
+        <div class="stack-chip"><span class="stack-dot" style="background:#000"></span>Unity / C#</div>
+        <div class="stack-chip"><span class="stack-dot" style="background:#F7DF1E"></span>HTML5 Canvas · JS</div>
+        <div class="stack-chip"><span class="stack-dot" style="background:#3DDC84"></span>Android / Kotlin</div>
+        <div class="stack-chip"><span class="stack-dot" style="background:#000"></span>iOS / Swift</div>
+        <div class="stack-chip"><span class="stack-dot" style="background:#003B57"></span>SQLite · SQLCipher</div>
+        <div class="stack-chip"><span class="stack-dot" style="background:#FFCA28"></span>Firebase (lite)</div>
+        <div class="stack-chip"><span class="stack-dot" style="background:#4285F4"></span>AdMob + Mediation</div>
+        <div class="stack-chip"><span class="stack-dot" style="background:#06B6D4"></span>Play Billing · IAP</div>
+        <div class="stack-chip"><span class="stack-dot" style="background:#FF9800"></span>WebGL · Three.js</div>
+        <div class="stack-chip"><span class="stack-dot" style="background:#7C3AED"></span>Spine 2D · skeletal</div>
+        <div class="stack-chip"><span class="stack-dot" style="background:#10B981"></span>Cloudflare Pages</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Contact ────────────────────────────────────────── -->
+  <section id="contact">
+    <div class="wrap">
+      <div class="contact-card">
+        <div class="section-label" style="display: block;">Talk to us</div>
+        <h2 class="section-title" style="margin-bottom: 12px;">Got a project in mind?</h2>
+        <p style="color: var(--text-soft); max-width: 540px; margin: 0 auto; line-height: 1.6;">
+          Pitch us a mobile app, a casual HTML5 game, an indie publisher
+          collab — or just say hi. We read every email and reply within a
+          couple of business days.
+        </p>
+        <a href="mailto:hello@h5game.store" class="contact-email">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          hello@h5game.store
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Footer ─────────────────────────────────────────── -->
+  <footer>
+    <div class="wrap footer-inner">
+      <div>© 2026 Dkendev · Indie studio · Made in Vietnam 🇻🇳</div>
+      <div class="footer-links">
+        <a href="https://play.google.com/store/apps/dev?id=YOUR_PLAY_DEV_ID" target="_blank" rel="noopener">Play Store</a>
+        <a href="https://dkennnn.github.io/tinywins-privacy/" target="_blank" rel="noopener">Privacy</a>
+        <a href="mailto:hello@h5game.store">Email</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
